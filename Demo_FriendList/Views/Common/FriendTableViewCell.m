@@ -6,6 +6,7 @@
 //
 
 #import "FriendTableViewCell.h"
+
 @interface FriendTableViewCell ()
 @property (nonatomic, strong) UIImageView *starImageView;
 @property (nonatomic, strong) UIImageView *avatarImageView;
@@ -20,8 +21,16 @@
 
 
 // 設定 Cell 資料
-- (void)configureWithName:(NSString *)name  {
-    self.nameLabel.text = name;
+- (void)configureWithFriendModel:(FriendModel *)model  {
+    self.nameLabel.text = model.name;
+    
+    bool isTop = model.isTop;
+    if(isTop){
+        [self.starImageView setHidden:NO];
+    }else{
+        [self.starImageView setHidden:YES];
+
+    }
 }
 
 - (void)awakeFromNib {
@@ -50,6 +59,23 @@
     [self initTransferButton];
     [self initMoreButton];
 
+
+}
+
+- (void)setFrame:(CGRect)frame{
+    [super setFrame:frame];
+    self.transferButton.frame = CGRectMake(frame.size.width - self.transferButton.frame.size.width- self.moreButton.frame.size.width -10,
+                                           FriendTableViewCellHeight * 0.5 - self.transferButton.frame.size.height * 0.5,
+                                           self.transferButton.frame.size.width,
+                                           self.transferButton.frame.size.height);
+    self.moreButton.frame = CGRectMake(frame.size.width - self.moreButton.frame.size.width,
+                                          FriendTableViewCellHeight * 0.5 - self.moreButton.frame.size.height * 0.5,
+                                          self.moreButton.frame.size.width,
+                                          self.moreButton.frame.size.height);
+
+}
+- (void)layoutSubviews {
+    [super layoutSubviews];
 }
 
 - (void) initStarImage{
@@ -60,7 +86,7 @@
     CGFloat y = FriendTableViewCellHeight*0.5 - height*0.5;
     self.starImageView =  [[UIImageView alloc]initWithFrame:CGRectMake(x, y, width, height)];
     self.starImageView.image  = [UIImage imageNamed:@"icFriendsStar"];
-    [self.starImageView setHidden:NO];
+    [self.starImageView setHidden:YES];
     [self addSubview:self.starImageView];
 }
 - (void) initAvatarImage{
@@ -93,7 +119,7 @@
 - (void)initTransferButton{
     CGFloat width = 47;
     CGFloat height = 24;
-    CGFloat x = self.frame.size.width - width;
+    CGFloat x = self.contentView.bounds.size.width - width;
     CGFloat y = FriendTableViewCellHeight*0.5 - height*0.5;
     self.transferButton = [[UIButton alloc]initWithFrame:CGRectMake(x,y ,width,height)];
     [self.transferButton setTitle:@"轉帳" forState:UIControlStateNormal];
@@ -110,7 +136,7 @@
 - (void)initMoreButton{
     CGFloat width = 18;
     CGFloat height = 4;
-    CGFloat x = self.frame.size.width ;
+    CGFloat x = self.contentView.bounds.size.width ;
     CGFloat y = FriendTableViewCellHeight*0.5 - height*0.5;
     self.moreButton = [[UIButton alloc]initWithFrame:CGRectMake(x,y ,width,height)];
     [self.moreButton setImage:[UIImage imageNamed:@"icFriendsMore"] forState:UIControlStateNormal];

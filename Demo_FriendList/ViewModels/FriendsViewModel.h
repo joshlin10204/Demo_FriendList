@@ -7,9 +7,13 @@
 
 #import <Foundation/Foundation.h>
 #import "FriendModel.h"
+#import "DemoModel.h"
 
 
 @interface FriendsViewModel : NSObject
 @property (nonatomic, strong) NSArray *friendsArrary;
-- (void)fetchFriendsDataWithSuccess:(void (^)(void))success withFail:(void (^)(void))fail;
+- (void)fetchFriendsDataWithDemoType:(DemoType) type withSuccess:(void (^)(NSArray *friendsList))success withFail:(void (^)(void))fail;
+
+- (NSArray*)searchFriendWithSearchString:(NSString*)searchString withFriendsList:(NSArray*) friendsList;
+
 @end

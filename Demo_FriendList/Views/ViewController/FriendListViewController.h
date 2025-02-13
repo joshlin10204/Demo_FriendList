@@ -6,11 +6,12 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "FriendModel.h"
 
-NS_ASSUME_NONNULL_BEGIN
 
 @interface FriendListViewController : UIViewController
 
++(FriendListViewController*) initFriendListViewControllerWithFriendModelList:(NSArray<FriendModel *>*)list;
+
 @end
 
-NS_ASSUME_NONNULL_END

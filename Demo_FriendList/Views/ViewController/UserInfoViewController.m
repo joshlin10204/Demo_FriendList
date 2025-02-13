@@ -9,10 +9,9 @@
 #import "UserViewModel.h"
 
 @interface UserInfoViewController ()
+@property (nonatomic, strong) UserViewModel *userViewModel;
 @property (nonatomic, strong) UILabel *userNameLabel;
 @property (nonatomic, strong) UILabel *kokoIDLabel;
-@property (nonatomic, strong) UserViewModel *userViewModel;
-
 @property (nonatomic, weak) NSString *userName;
 @property (nonatomic, weak) NSString *kokoID;
 

@@ -7,96 +7,48 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "79F8363D-9670-48A5-933B-D865963153FB"
+            uuid = "DB08B6EA-D903-47C9-AF6F-2299D76CF46A"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "Demo_FriendList/Views/ViewController/FriendPageViewController.m"
+            filePath = "Demo_FriendList/Views/ViewController/FriendListViewController.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "45"
-            endingLineNumber = "45"
-            landmarkName = "-didSelectSegmentAtIndex:"
+            startingLineNumber = "107"
+            endingLineNumber = "107"
+            landmarkName = "-didSearchText:"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "2BE543D1-287F-4D9D-BA0D-A301E094444F"
+            uuid = "2694FA8B-DCB8-4F59-98CF-A44A781DCD42"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "Demo_FriendList/Views/Common/CustomSegmentedView.m"
+            filePath = "Demo_FriendList/ViewModels/FriendsViewModel.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "98"
-            endingLineNumber = "98"
-            landmarkName = "-onClickChatButton"
+            startingLineNumber = "103"
+            endingLineNumber = "103"
+            landmarkName = "-searchFriendWithSearchString:withFriendsList:"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "B2C002B6-552E-4D2F-B53A-2D8BCE630FD4"
+            uuid = "F1B0CC21-F618-44B5-9D98-57471D69573F"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "Demo_FriendList/Views/Common/CustomSegmentedView.m"
+            filePath = "Demo_FriendList/Views/Common/FriendTableViewCell.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "84"
-            endingLineNumber = "84"
-            landmarkName = "-onClickFriendButton"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "2971D796-16B7-4503-A1E1-DAEEED2D1DC9"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Demo_FriendList/ViewModels/UserViewModel.m"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "27"
-            endingLineNumber = "27"
-            landmarkName = "-fetchUserDataWithSuccess:withFail:"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "79ECDB12-00A7-4B30-A5B7-D0C20DA9EEAF"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Demo_FriendList/ViewModels/UserViewModel.m"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "23"
-            endingLineNumber = "23"
-            landmarkName = "-fetchUserDataWithSuccess:withFail:"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "7715E643-F728-4378-AA48-3209E85591BB"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Demo_FriendList/Views/ViewController/UserInfoViewController.m"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "45"
-            endingLineNumber = "45"
-            landmarkName = "-reloadUserInfoData"
+            startingLineNumber = "28"
+            endingLineNumber = "28"
+            landmarkName = "-configureWithFriendModel:"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

@@ -6,15 +6,13 @@
 //
 
 #import <UIKit/UIKit.h>
-typedef enum{
-    DemoTypeNoFriend = 0,  // 0
-    DemoTypeHasFriend  = 1,  // 1
-    DemoTypeInviteFriend  = 2,  // 2
-}DemoType;
+#import "DemoModel.h"
+
 
 @interface FriendsPage : UIViewController
 
 +(FriendsPage*) initFriendsPageWithDemoType:(DemoType)type;
+@property (nonatomic, assign) DemoType  demoType;
 
 @end
 

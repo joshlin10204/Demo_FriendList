@@ -10,20 +10,8 @@
 #import "InviteListViewController.h"
 #import "FriendPageViewController.h"
 
-#import "FriendsViewModel.h"
-#import "UserViewModel.h"
 
-
-#define UserInfoViewHeight self.view.frame.size.height*0.12
-#define InviteListViewHeight self.view.frame.size.height*0.3
-#define SubFriendListViewHeight self.view.frame.size.height*0.85
-
-
-@interface FriendsPage (){
-
-    FriendsViewModel *_friendsViewModel;
-    UserViewModel *_userViewModel;
-}
+@interface FriendsPage ()
 @property (nonatomic, strong) UIScrollView  *scrollView;
 @property (nonatomic, strong) UserInfoViewController * userInfoViewController;
 @property (nonatomic, strong) InviteListViewController * inviteListViewController;
@@ -37,8 +25,7 @@
 +(FriendsPage*) initFriendsPageWithDemoType:(DemoType)type{
     
     FriendsPage *friendsPage  = [[FriendsPage alloc]init];
-    NSLog(@"%u",type);
-
+    friendsPage.demoType = type;
     return  friendsPage;
 }
 
@@ -48,7 +35,7 @@
     [self initNavigationBarItem];
     [self initScrollView];
     [self initUserInfoViewController];
-    [self initSubFriendListViewController];
+    [self initFriendPageViewController];
 
 
 }
@@ -70,46 +57,51 @@
 
 - (void)initScrollView{
 //    self.scrollView = [[UIScrollView alloc] initWithFrame:self.view.bounds];
-    
+    CGFloat navBarHeight = self.navigationController.navigationBar.frame.size.height;
+    CGFloat statusBarHeight = 0;
+
+    if (@available(iOS 13.0, *)) {
+        UIStatusBarManager *statusBarManager = [UIApplication sharedApplication].windows.firstObject.windowScene.statusBarManager;
+        statusBarHeight = statusBarManager.statusBarFrame.size.height;
+    }else{
+        statusBarHeight = [UIApplication sharedApplication].statusBarFrame.size.height;
+    }
+
+
+    CGFloat height = self.view.frame.size.height - navBarHeight - statusBarHeight;
     CGFloat width = self.view.frame.size.width*0.9;
     CGFloat x = self.view.center.x - width*0.5;
-    self.scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(x, 0, width, self.view.frame.size.height)];
-    self.scrollView.contentSize = CGSizeMake(self.scrollView.contentSize.width,self.scrollView.frame.size.height);
+    CGFloat y = navBarHeight + statusBarHeight;
+
+    self.scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(x, y, width, height)];
+    self.scrollView.contentSize = CGSizeMake(self.scrollView.contentSize.width,height);
     [self.scrollView setShowsHorizontalScrollIndicator:NO];
     [self.scrollView setShowsVerticalScrollIndicator:NO];//
-//    self.scrollView.contentSize = self.view.frame.size;
     [self.view addSubview:self.scrollView];
 }
 
 - (void) initUserInfoViewController{
     
-//    CGFloat navBarHeight = self.navigationController.navigationBar.frame.size.height;
-//    CGFloat statusBarHeight = UIApplication.sharedApplication.statusBarFrame.size.height;
-//    CGFloat topPadding = navBarHeight + statusBarHeight;
+    CGFloat width = self.scrollView.frame.size.width;
+    CGFloat height = self.scrollView.frame.size.height*0.1;
+    CGFloat x = 0;
+    CGFloat y = 0;
     self.userInfoViewController = [[UserInfoViewController alloc]init];
-    self.userInfoViewController.view.frame = CGRectMake(0, 0, self.view.frame.size.width*0.9, UserInfoViewHeight);
+    self.userInfoViewController.view.frame = CGRectMake(x, y, width, height);
     [self addChildViewController:self.userInfoViewController];
     [self.scrollView addSubview:self.userInfoViewController.view];
 
     [self.userInfoViewController didMoveToParentViewController:self];
 }
 
-- (void) initInviteListViewController{
-    CGFloat y = UserInfoViewHeight;
+- (void) initFriendPageViewController{
+    CGFloat width = self.scrollView.frame.size.width;
+    CGFloat height = self.scrollView.frame.size.height*0.9;
+    CGFloat x = 0;
+    CGFloat y = self.scrollView.frame.size.height*0.1;
 
-    self.inviteListViewController = [[InviteListViewController alloc]init];
-    self.inviteListViewController.view.frame = CGRectMake(0, y, self.view.frame.size.width*0.9, InviteListViewHeight);
-    [self addChildViewController:self.inviteListViewController];
-    [self.scrollView addSubview:self.inviteListViewController.view];
-    [self.inviteListViewController didMoveToParentViewController:self];
-}
-
-- (void) initSubFriendListViewController{
-//    CGFloat y = UserInfoViewHeight + InviteListViewHeight;
-    CGFloat y = UserInfoViewHeight;
-
-    self.friendPageViewController = [[FriendPageViewController alloc]init];
-    self.friendPageViewController.view.frame = CGRectMake(0, y, self.view.frame.size.width*0.9, SubFriendListViewHeight);
+    self.friendPageViewController = [FriendPageViewController initFriendPageViewControllerWithDemoType:self.demoType];
+    self.friendPageViewController.view.frame = CGRectMake(x, y, width, height);
     [self addChildViewController:self.friendPageViewController];
     [self.scrollView addSubview:self.friendPageViewController.view];
     [self.friendPageViewController didMoveToParentViewController:self];
@@ -118,15 +110,18 @@
 
 
 
-- (void)reloadFriendListDate{
-    _friendsViewModel = [[FriendsViewModel alloc]init];
-    [_friendsViewModel fetchFriendsDataWithSuccess:^{
-        
-    } withFail:^{
-        
-    }];
 
-}
 
+
+//- (void) initInviteListViewController{
+//    CGFloat y = UserInfoViewHeight;
+//
+//    self.inviteListViewController = [[InviteListViewController alloc]init];
+//    self.inviteListViewController.view.frame = CGRectMake(0, y, self.view.frame.size.width*0.9, InviteListViewHeight);
+//    [self addChildViewController:self.inviteListViewController];
+//    [self.scrollView addSubview:self.inviteListViewController.view];
+//    [self.inviteListViewController didMoveToParentViewController:self];
+//}
+//
 
 @end

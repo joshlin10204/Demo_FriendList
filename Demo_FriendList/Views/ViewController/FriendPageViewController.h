@@ -6,11 +6,11 @@
 //
 
 #import <UIKit/UIKit.h>
-
-NS_ASSUME_NONNULL_BEGIN
+#import "DemoModel.h"
 
 @interface FriendPageViewController : UIViewController
++(FriendPageViewController*) initFriendPageViewControllerWithDemoType:(DemoType)type;
+@property (nonatomic, assign) DemoType  demoType;
 
 @end
 
-NS_ASSUME_NONNULL_END

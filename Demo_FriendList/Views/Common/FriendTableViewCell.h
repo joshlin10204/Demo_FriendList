@@ -6,12 +6,13 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "FriendModel.h"
+
 #define FriendTableViewCellHeight 60.0
 
 @interface FriendTableViewCell : UITableViewCell
 
 
-- (void)configureWithName:(NSString *)name;
-
+- (void)configureWithFriendModel:(FriendModel *)model;
 @end
 

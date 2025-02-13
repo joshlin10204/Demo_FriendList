@@ -10,8 +10,8 @@
 
 @interface FriendModel : NSObject
 @property (nonatomic, strong) NSString *name;
-@property (nonatomic, assign) NSInteger *status;
-@property (nonatomic, strong) NSString *isTop;
+@property (nonatomic, assign) NSInteger status;
+@property (nonatomic, assign) BOOL isTop;
 @property (nonatomic, strong) NSString *fid;
 @property (nonatomic, strong) NSString *updateDate;
 
