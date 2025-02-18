@@ -6,22 +6,23 @@
 //
 
 #import "FriendPageViewController.h"
-#import "CustomSegmentedView.h"
 #import "FriendListViewController.h"
 #import "ChatListViewController.h"
 #import "FriendsViewModel.h"
 
 
-@interface FriendPageViewController ()<CustomSegmentedViewDelegate>
+@interface FriendPageViewController ()<InviteListViewControllerDelegate,CustomSegmentedViewDelegate>
 @property (nonatomic, strong) FriendsViewModel *friendsViewModel;
 @property (nonatomic, strong) UIActivityIndicatorView *activityIndicator;
-@property (nonatomic, strong) CustomSegmentedView *headerSegmentView;
-@property (nonatomic, strong) UIPageViewController * pageViewController;
+
 @property (nonatomic, strong) FriendListViewController * friendListViewController;
 @property (nonatomic, strong) ChatListViewController * chatListViewController;
 @property (nonatomic, strong) NSMutableArray *pagesViewControllersArray;
 
 @property (nonatomic, strong) NSArray *friendsList;
+@property (nonatomic, strong) NSArray *inviteList;
+
+@property (nonatomic, assign) NSInteger friendsBadgeCount;
 
 
 @end
@@ -38,6 +39,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    self.friendsBadgeCount = 0;
     [self.view setBackgroundColor:[UIColor whiteColor]];
 
     
@@ -58,11 +60,14 @@
 
 - (void)fetchFriendListDate{
     self.friendsViewModel = [[FriendsViewModel alloc]init];
-    [self.friendsViewModel fetchFriendsDataWithDemoType:self.demoType withSuccess:^(NSArray *friendsList) {
+    [self.friendsViewModel fetchFriendsDataWithDemoType:self.demoType withSuccess:^(NSArray *friendsList,NSArray*inviteList) {
         self.friendsList = friendsList;
+        self.inviteList = inviteList;
         [self reloadData];
 
     } withFail:^{
+        self.friendsList = @[];
+        self.inviteList = @[];
         [self reloadData];
 
     }];
@@ -71,6 +76,7 @@
 - (void)reloadData{
     dispatch_async(dispatch_get_main_queue(), ^() {
         [self.activityIndicator stopAnimating];
+        [self initInviteListViewController];
         [self initHeaderSegmentController];
         [self initPageViewController];
     });
@@ -92,29 +98,43 @@
     [self.view addSubview:self.activityIndicator];
 }
 
+- (void) initInviteListViewController{
+    CGFloat width = self.view.frame.size.width;
+    CGFloat height = self.inviteList.count == 0 ?0: InviteTableViewCellHeight;
+    CGFloat x = 0;
+    CGFloat y = 0;
+    self.inviteListViewController = [InviteListViewController initInviteListViewControllerWithInvitelList:self.inviteList];
+    self.inviteListViewController.view.frame = CGRectMake(x, y, width, height);
+    self.inviteListViewController.delegate = self;
+    [self addChildViewController:self.inviteListViewController];
+    [self.view addSubview:self.inviteListViewController.view];
+    [self.inviteListViewController didMoveToParentViewController:self];
+}
+
+
 - (void) initHeaderSegmentController{
     
-
-    CGFloat width = self.view.frame.size.width*0.3;
+    CGFloat x = 0;
+    CGFloat y = self.inviteListViewController.view.frame.size.height+15;
+    CGFloat width = self.view.frame.size.width*0.35;
     CGFloat height = width *0.3;
-    self.headerSegmentView = [[CustomSegmentedView alloc]initWithFrame:CGRectMake(0, 0, width,height)];
+    self.headerSegmentView = [[CustomSegmentedView alloc]initWithFrame:CGRectMake(x, y, width,height)];
     self.headerSegmentView.delegate = self;
-
+    self.friendsBadgeCount = [self.friendsViewModel  getFriendBadgeCount:self.friendsList];
+    [self.headerSegmentView updatFriendBadge:self.friendsBadgeCount withChatBadge:100];
+    
     [self.view addSubview:self.headerSegmentView];
-}
-- (void)didSelectSegmentAtIndex:(NSInteger)index{
-    [self.pageViewController setViewControllers:@[self.pagesViewControllersArray[index]]
-                                      direction:UIPageViewControllerNavigationDirectionForward
-                                       animated:NO
-                                     completion:nil];
     
 }
+
 - (void) initPageViewController{
     
     CGFloat width = self.view.frame.size.width;
-    CGFloat height = self.view.frame.size.height - self.headerSegmentView.frame.size.height;
+    CGFloat height = self.view.frame.size.height - self.headerSegmentView.frame.size.height - self.inviteListViewController.view.frame.size.height;
+    CGFloat x = 0;
+    CGFloat y = self.headerSegmentView.frame.origin.y + self.headerSegmentView.frame.size.height;
     self.pagesViewControllersArray = [NSMutableArray arrayWithCapacity:1];
-    self.friendListViewController = [FriendListViewController initFriendListViewControllerWithFriendModelList:self.friendsList];
+    self.friendListViewController = [FriendListViewController initFriendListViewControllerWithDemoType:self.demoType withFriendsList:self.friendsList];
     self.chatListViewController = [[ChatListViewController alloc]init];
     [self.pagesViewControllersArray addObject:self.friendListViewController];
     [self.pagesViewControllersArray addObject:self.chatListViewController];
@@ -122,7 +142,7 @@
     NSDictionary *options = @{UIPageViewControllerOptionSpineLocationKey : @(UIPageViewControllerSpineLocationMin)};
     self.pageViewController = [[UIPageViewController alloc] initWithTransitionStyle:UIPageViewControllerTransitionStylePageCurl navigationOrientation:UIPageViewControllerNavigationOrientationHorizontal options:options];
 
-    self.pageViewController.view.frame = CGRectMake(0, self.headerSegmentView.frame.size.height, width,height);
+    self.pageViewController.view.frame = CGRectMake(x,y , width,height);
     [self.pageViewController setViewControllers: @[self.pagesViewControllersArray.firstObject] direction:UIPageViewControllerNavigationDirectionForward animated:YES completion:nil];
     [self addChildViewController:self.pageViewController];
 
@@ -130,12 +150,47 @@
 }
 
 
-- (void) initFriendListViewController{
-    
+
+- (void)didSelectSegmentAtIndex:(NSInteger)index{
+    [self.pageViewController setViewControllers:@[self.pagesViewControllersArray[index]]
+                                      direction:UIPageViewControllerNavigationDirectionForward
+                                       animated:NO
+                                     completion:nil];
     
 }
-- (void) initChatListViewController{}
 
 
+#pragma mark - InviteListViewControllerDelegate
 
+- (void) didExpandTableView:(BOOL)isExpand{
+    dispatch_async(dispatch_get_main_queue(), ^() {
+        
+        CGFloat expandHight = self.inviteList.count >3? InviteTableViewCellHeight*3 :InviteTableViewCellHeight* self.inviteList.count;
+        CGFloat inviteListViewHeight = isExpand? expandHight : InviteTableViewCellHeight;
+        
+        
+        
+        
+        [UIView animateWithDuration:0.2 animations:^{
+            self.inviteListViewController.view.frame = CGRectMake(self.inviteListViewController.view.frame.origin.x,
+                                                                  self.inviteListViewController.view.frame.origin.y,
+                                                                  self.inviteListViewController.view.frame.size.width,
+                                                                  inviteListViewHeight);
+            
+            self.headerSegmentView.frame = CGRectMake(self.headerSegmentView.frame.origin.x,
+                                                      self.inviteListViewController.view.frame.size.height+15,
+                                                     self.headerSegmentView.frame.size.width,
+                                                     self.headerSegmentView.frame.size.height);
+            
+            self.pageViewController.view.frame = CGRectMake(self.pageViewController.view.frame.origin.x,
+                                                            self.headerSegmentView.frame.origin.y + self.headerSegmentView.frame.size.height,
+                                                            self.pageViewController.view.frame.size.width,
+                                                            self.view.frame.size.height - self.headerSegmentView.frame.size.height - self.inviteListViewController.view.frame.size.height);
+
+        }];
+
+        
+
+    });
+}
 @end

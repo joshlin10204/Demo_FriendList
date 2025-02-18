@@ -36,10 +36,10 @@
 }
 
 - (void)initBasicView{
-    CGFloat width = self.bounds.size.width*0.7;
+    CGFloat width = self.frame.size.width*0.7;
     CGFloat height = 410;
-    CGFloat x = self.bounds.size.width*0.5 - width*0.5;
-    CGFloat y = self.bounds.size.height*0.4 - height*0.5;
+    CGFloat x = self.frame.size.width*0.5 - width*0.5;
+    CGFloat y = self.frame.size.height*0.4 - height*0.5;
     self.basicView = [[UIView alloc]initWithFrame:CGRectMake(x, y, width, height)];
     [self addSubview:self.basicView];
     

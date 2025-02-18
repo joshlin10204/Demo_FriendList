@@ -6,12 +6,11 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "FriendModel.h"
+#import "FriendsViewModel.h"
 
 
 @interface FriendListViewController : UIViewController
 
-+(FriendListViewController*) initFriendListViewControllerWithFriendModelList:(NSArray<FriendModel *>*)list;
-
++(FriendListViewController*) initFriendListViewControllerWithDemoType:(DemoType)type withFriendsList:(NSArray<FriendModel*>*)list;
 @end
 

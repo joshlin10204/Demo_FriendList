@@ -7,15 +7,14 @@
 
 #import "FriendsPage.h"
 #import "UserInfoViewController.h"
-#import "InviteListViewController.h"
 #import "FriendPageViewController.h"
 
 
-@interface FriendsPage ()
+@interface FriendsPage ()<UIScrollViewDelegate>
 @property (nonatomic, strong) UIScrollView  *scrollView;
 @property (nonatomic, strong) UserInfoViewController * userInfoViewController;
-@property (nonatomic, strong) InviteListViewController * inviteListViewController;
 @property (nonatomic, strong) FriendPageViewController * friendPageViewController;
+@property (nonatomic, strong) UITapGestureRecognizer * hideKeyboardTap;
 
 @end
 
@@ -36,9 +35,37 @@
     [self initScrollView];
     [self initUserInfoViewController];
     [self initFriendPageViewController];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
 
 
 }
+- (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+#pragma mark - Keyboard NSNotificationCenter
+
+- (void)keyboardWillShow:(NSNotification *)notification {
+//    CGFloat y = self.scrollView.frame.size.height*0.15;
+    CGFloat y = self.userInfoViewController.view.frame.size.height + self.friendPageViewController.inviteListViewController.view.frame.size.height + self.friendPageViewController.headerSegmentView.frame.size.height+15;
+
+    [self.scrollView setContentOffset:CGPointMake(0, y)];
+    
+    self.hideKeyboardTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(dismissKeyboard)];
+    [self.view addGestureRecognizer:self.hideKeyboardTap];
+}
+
+- (void)keyboardWillHide:(NSNotification *)notification {
+    [self.scrollView setContentOffset:CGPointMake(0, 0)];
+    [self.view removeGestureRecognizer:self.hideKeyboardTap];
+
+}
+- (void)dismissKeyboard {
+    [self.view endEditing:YES];
+}
+
+#pragma mark - Init
 
 - (void)initNavigationBarItem{
     UIBarButtonItem *backButtonItem = [[UIBarButtonItem alloc]initWithImage:[UIImage imageNamed:@"icNavibarBack"] style:UIBarButtonItemStylePlain target:self action:@selector(onClickBackItem)];
@@ -72,9 +99,11 @@
     CGFloat width = self.view.frame.size.width*0.9;
     CGFloat x = self.view.center.x - width*0.5;
     CGFloat y = navBarHeight + statusBarHeight;
-
+    
     self.scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(x, y, width, height)];
-    self.scrollView.contentSize = CGSizeMake(self.scrollView.contentSize.width,height);
+    self.scrollView.delegate = self;
+    [self.scrollView setScrollEnabled:NO];
+    self.scrollView.contentSize = CGSizeMake(self.scrollView.contentSize.width,height*1.2);
     [self.scrollView setShowsHorizontalScrollIndicator:NO];
     [self.scrollView setShowsVerticalScrollIndicator:NO];//
     [self.view addSubview:self.scrollView];
@@ -90,9 +119,9 @@
     self.userInfoViewController.view.frame = CGRectMake(x, y, width, height);
     [self addChildViewController:self.userInfoViewController];
     [self.scrollView addSubview:self.userInfoViewController.view];
-
     [self.userInfoViewController didMoveToParentViewController:self];
 }
+
 
 - (void) initFriendPageViewController{
     CGFloat width = self.scrollView.frame.size.width;
@@ -109,19 +138,44 @@
 
 
 
+-(void)scrollViewDidScroll:(UIScrollView*)scrollView{
+    
+    if(!self.scrollView){
+        NSLog(@"1");
+
+    }
+//    if(scrollView.contentOffset.y <=0){
+//        NSLog(@"2");
+//    }
+
+
+    CGFloat y = self.scrollView.frame.size.height*0.1 ;
+    
+    if(scrollView.contentOffset.y >= 0){
+        NSLog(@"%f",scrollView.contentOffset.y);
+
+    }
+    if(scrollView.contentOffset.y >= y){
+        NSLog(@"%f",scrollView.contentOffset.y);
+
+    }
+//    if (!self.scrollView) {
+//        scrollView.contentOffset = CGPointZero;
+//    }
+//    if (scrollView.contentOffset.y <= 0) {
+//        if (!self.fingerIsTouch) {
+//            return;
+//        }
+//        self.vcCanScroll = NO;
+//        scrollView.contentOffset = CGPointZero;
+//        [[NSNotificationCenter defaultCenter] postNotificationName:@"leaveTop" object:nil];//到顶通知父视图改变状态
+//    }
+//    self.tableView.showsVerticalScrollIndicator = _vcCanScroll?YES:NO;
+}
 
 
 
 
-//- (void) initInviteListViewController{
-//    CGFloat y = UserInfoViewHeight;
-//
-//    self.inviteListViewController = [[InviteListViewController alloc]init];
-//    self.inviteListViewController.view.frame = CGRectMake(0, y, self.view.frame.size.width*0.9, InviteListViewHeight);
-//    [self addChildViewController:self.inviteListViewController];
-//    [self.scrollView addSubview:self.inviteListViewController.view];
-//    [self.inviteListViewController didMoveToParentViewController:self];
-//}
-//
+
 
 @end

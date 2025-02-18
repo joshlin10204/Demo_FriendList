@@ -12,8 +12,10 @@
 
 @interface FriendsViewModel : NSObject
 @property (nonatomic, strong) NSArray *friendsArrary;
-- (void)fetchFriendsDataWithDemoType:(DemoType) type withSuccess:(void (^)(NSArray *friendsList))success withFail:(void (^)(void))fail;
+- (void)fetchFriendsDataWithDemoType:(DemoType) type withSuccess:(void (^)(NSArray *friendsList,NSArray *inviteList))success withFail:(void (^)(void))fail;
 
 - (NSArray*)searchFriendWithSearchString:(NSString*)searchString withFriendsList:(NSArray*) friendsList;
+
+- (NSInteger)getFriendBadgeCount:(NSArray*) friendsList;
 
 @end

@@ -20,7 +20,6 @@
 @implementation FriendTableViewCell
 
 
-// 設定 Cell 資料
 - (void)configureWithFriendModel:(FriendModel *)model  {
     self.nameLabel.text = model.name;
     

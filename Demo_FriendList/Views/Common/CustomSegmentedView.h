@@ -21,6 +21,6 @@
 
 @property(nonatomic, weak) id<CustomSegmentedViewDelegate> delegate;
 
-
+- (void)updatFriendBadge:(NSInteger)friendBadgeCount withChatBadge:(NSInteger)chatBadgeCount;
 @end
 

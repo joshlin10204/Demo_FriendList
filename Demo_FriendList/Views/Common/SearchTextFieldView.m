@@ -9,7 +9,7 @@
 @interface SearchTextFieldView ()<UITextFieldDelegate>
 @property (nonatomic, strong) UIImageView *searchImage;
 @property (nonatomic, strong) UITextField *searchTextField;
-@property (nonatomic, strong) UIButton *searchButton;
+@property (nonatomic, strong) UIButton *addButton;
 
 @end
 
@@ -26,7 +26,7 @@
 
         [self initSearchImage];
         [self initSearchTextField];
-        [self initSearchButton];
+        [self initAddButton];
     }
     return self;
 }
@@ -42,17 +42,17 @@
     [self addSubview:self.searchImage];
 }
 
-- (void)initSearchButton{
+- (void)initAddButton{
     
     CGFloat width = 24;
     CGFloat height = 24;
     CGFloat x = self.frame.size.width - width - 10 ;
     CGFloat y = self.frame.size.height*0.5 - height*0.5;
-    self.searchButton = [[UIButton alloc]initWithFrame:CGRectMake(x,y ,width,height)];
-    [self.searchButton setImage:[UIImage imageNamed:@"icBtnAddFriends"] forState:UIControlStateNormal];
-    [self.searchButton addTarget:self action:@selector(onClikcSearchButton) forControlEvents:UIControlEventTouchUpInside];
+    self.addButton = [[UIButton alloc]initWithFrame:CGRectMake(x,y ,width,height)];
+    [self.addButton setImage:[UIImage imageNamed:@"icBtnAddFriends"] forState:UIControlStateNormal];
+    [self.addButton addTarget:self action:@selector(onClikcAddButton) forControlEvents:UIControlEventTouchUpInside];
 
-    [self addSubview:self.searchButton];
+    [self addSubview:self.addButton];
 }
 
 
@@ -71,17 +71,22 @@
     self.searchTextField.minimumFontSize = 14;
   
     self.searchTextField.textColor = [UIColor colorWithRed:(142/255.0) green:(142/255.0) blue:(147/255.0) alpha:1];
+    
+    self.searchTextField.returnKeyType = UIReturnKeySearch;
   
     self.searchTextField.delegate = self;
+    
+    [self.searchTextField addTarget:self
+                  action:@selector(textFieldDidChange:)
+        forControlEvents:UIControlEventEditingChanged];
 
      [self addSubview:self.searchTextField];
 }
 
 
-- (void)onClikcSearchButton{
+- (void)onClikcAddButton{
     
-    [self.searchTextField resignFirstResponder];
-    [self.delegate didSearchText:self.searchTextField.text];
+    NSLog(@"AddButton");
 }
 
 
@@ -107,6 +112,13 @@
     [textField resignFirstResponder];
     [self.delegate didSearchText:self.searchTextField.text];
     return false;
+}
+
+// 編輯中
+- (void)textFieldDidChange:(UITextField *)textField {
+    NSLog(@"輸入中：%@",textField.text);
+    [self.delegate didSearchText:self.searchTextField.text];
+
 }
  
 @end

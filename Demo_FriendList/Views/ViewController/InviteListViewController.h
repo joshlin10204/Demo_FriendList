@@ -6,11 +6,21 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "InviteTableViewCell.h"
+#import "FriendsViewModel.h"
 
-NS_ASSUME_NONNULL_BEGIN
+
+@protocol InviteListViewControllerDelegate<NSObject>
+//@optional
+@required
+- (void) didExpandTableView:(BOOL)isExpand;
+@end
+
 
 @interface InviteListViewController : UIViewController
 
++(InviteListViewController*) initInviteListViewControllerWithInvitelList:(NSArray<FriendModel*>*)list;
+@property(nonatomic, weak) id<InviteListViewControllerDelegate> delegate;
+
 @end
 
-NS_ASSUME_NONNULL_END

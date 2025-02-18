@@ -17,7 +17,7 @@
 @implementation FriendsViewModel
 
 
-- (void)fetchFriendsDataWithDemoType:(DemoType) type withSuccess:(void (^)(NSArray *friendsList))success withFail:(void (^)(void))fail{
+- (void)fetchFriendsDataWithDemoType:(DemoType) type withSuccess:(void (^)(NSArray *friendsList,NSArray *inviteList))success withFail:(void (^)(void))fail{
 
     
     NSString *url = @"";
@@ -52,7 +52,7 @@
                 NSArray *responseList = (NSArray*)responseObject[@"response"];
                 for (NSDictionary *info in responseList) {
                     NSString *fid = info[@"fid"] ?: @"";
-                    NSString *updateDate = info[@"updateDate"] ?: @"";
+                    NSString *updateDate = [info[@"updateDate"] stringByReplacingOccurrencesOfString:@"/" withString:@""]?:@"";
                     
                     FriendModel *model = [[FriendModel alloc] init];
                     model.fid = fid;
@@ -61,7 +61,6 @@
                     model.status = info[@"status"] ?: 0;
                     model.updateDate = updateDate;
 
-                    // 比較 updateDate，保留最新的那筆
                     FriendModel *existingModel = friendDict[fid];
                     if (!existingModel || [updateDate compare:existingModel.updateDate options:NSNumericSearch] == NSOrderedDescending) {
                         friendDict[fid] = model;
@@ -79,9 +78,9 @@
         dispatch_group_notify(group, dispatch_get_main_queue(), ^{
             if (friendDict.count > 0) {
                 NSArray *finalList = [friendDict allValues];
-                
-                NSLog(@"%@",finalList);
-                success(finalList);
+                NSArray *friendList = [self getFriendsList:finalList];
+                NSArray *inviteList = [self getInviteList:finalList];
+                success(friendList,inviteList);
             } else {
                 fail();
             }
@@ -95,13 +94,56 @@
     NSMutableArray *searchList = [[NSMutableArray alloc]init];
     
     for(FriendModel *model in friendsList){
-        if([searchString isEqualToString:model.name]){
+//        if([searchString isEqualToString:model.name]){
+//            [searchList addObject:model];
+//        }
+        
+        if ([model.name rangeOfString:searchString options:NSCaseInsensitiveSearch].location != NSNotFound) {
             [searchList addObject:model];
         }
     }
-
     return [searchList copy];
     
+}
+
+
+- (NSArray *)getFriendsList:(NSArray*)list{
+    
+    NSMutableArray *friendsList = [[NSMutableArray alloc]init];
+    for(FriendModel *model in list){
+        
+        if([model.status intValue] != 0 ){
+            [friendsList addObject:model];
+            
+        }
+        
+    }
+    return  [friendsList mutableCopy];
+}
+
+- (NSArray *)getInviteList:(NSArray*)list{
+    
+    NSMutableArray *inviteList = [[NSMutableArray alloc]init];
+    for(FriendModel *model in list){
+        
+        if([model.status intValue] == 0 ){
+            [inviteList addObject:model];
+            
+        }
+        
+    }
+    return  [inviteList mutableCopy];
+}
+
+- (NSInteger)getFriendBadgeCount:(NSArray*) friendsList{
+    
+    NSInteger count = 0;
+    for(FriendModel *model in friendsList){
+        if([model.status intValue] == 2){
+            count+=1;
+        }
+    }
+    return  count;
 }
 
 @end
