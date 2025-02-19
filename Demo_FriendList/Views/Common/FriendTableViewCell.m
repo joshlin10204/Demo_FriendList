@@ -13,6 +13,9 @@
 @property (nonatomic, strong) UILabel *nameLabel;
 @property (nonatomic, strong) UIButton *transferButton;
 @property (nonatomic, strong) UIButton *moreButton;
+@property (nonatomic, strong) UIButton *inviteButton;
+
+@property (nonatomic, assign) BOOL isOnInvite;
 
 
 @end
@@ -28,8 +31,9 @@
         [self.starImageView setHidden:NO];
     }else{
         [self.starImageView setHidden:YES];
-
     }
+    
+    self.isOnInvite = [model.status intValue] == 2? YES : NO;
 }
 
 - (void)awakeFromNib {
@@ -46,6 +50,7 @@
 - (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
+        self.isOnInvite = NO;
         [self setupViews];
     }
     return self;
@@ -57,13 +62,25 @@
     [self initNameLabel];
     [self initTransferButton];
     [self initMoreButton];
+    [self initInviteButton];
 
 
 }
 
 - (void)setFrame:(CGRect)frame{
     [super setFrame:frame];
-    self.transferButton.frame = CGRectMake(frame.size.width - self.transferButton.frame.size.width- self.moreButton.frame.size.width -10,
+    
+    CGFloat transferButtonX = frame.size.width - self.transferButton.frame.size.width- self.moreButton.frame.size.width - 10;
+    
+    if(self.isOnInvite){
+        transferButtonX = frame.size.width - self.transferButton.frame.size.width- self.inviteButton.frame.size.width - 10;
+        [self.inviteButton setHidden:NO];
+        [self.moreButton setHidden:YES];
+    }else{
+        [self.inviteButton setHidden:YES];
+        [self.moreButton setHidden:NO];
+    }
+    self.transferButton.frame = CGRectMake(transferButtonX,
                                            FriendTableViewCellHeight * 0.5 - self.transferButton.frame.size.height * 0.5,
                                            self.transferButton.frame.size.width,
                                            self.transferButton.frame.size.height);
@@ -71,6 +88,11 @@
                                           FriendTableViewCellHeight * 0.5 - self.moreButton.frame.size.height * 0.5,
                                           self.moreButton.frame.size.width,
                                           self.moreButton.frame.size.height);
+    
+    self.inviteButton.frame = CGRectMake(frame.size.width - self.inviteButton.frame.size.width,
+                                          FriendTableViewCellHeight * 0.5 - self.inviteButton.frame.size.height * 0.5,
+                                          self.inviteButton.frame.size.width,
+                                          self.inviteButton.frame.size.height);
 
 }
 - (void)layoutSubviews {
@@ -144,7 +166,23 @@
 
 }
 
+- (void)initInviteButton{
+    CGFloat width = 60;
+    CGFloat height = 24;
+    CGFloat x = self.contentView.bounds.size.width ;
+    CGFloat y = FriendTableViewCellHeight*0.5 - height*0.5;
+    self.inviteButton = [[UIButton alloc]initWithFrame:CGRectMake(x,y ,width,height)];
+    [self.inviteButton setHidden:YES];
+    [self.inviteButton setTitle:@"邀請中" forState:UIControlStateNormal];
+    [self.inviteButton.titleLabel setFont:[UIFont boldSystemFontOfSize:16]];
+    [self.inviteButton setTitleColor:[UIColor colorWithRed:(153/255.0) green:(153/255.0) blue:(153/255.0) alpha:1] forState:UIControlStateNormal];
 
+    [self.inviteButton.layer setCornerRadius:2];
+    [self.inviteButton.layer setBorderWidth:1.2];
+    [self.inviteButton.layer setBorderColor: [UIColor colorWithRed:(153/255.0) green:(153/255.0) blue:(153/255.0) alpha:1].CGColor];
+
+    [self addSubview:self.inviteButton];
+}
 
 
 @end

@@ -34,12 +34,12 @@
 @implementation FriendListViewController
 
 
-+(FriendListViewController*) initFriendListViewControllerWithDemoType:(DemoType)type withFriendsList:(NSArray<FriendModel*>*)list{
++(FriendListViewController*) initFriendListViewControllerWithFriendsList:(NSArray<FriendModel*>*)list{
     
     FriendListViewController *friendListViewController  = [[FriendListViewController alloc]init];
-    friendListViewController.demoType =  type;
     friendListViewController.friendsArray = list;
     friendListViewController.showFriendsArray = [list mutableCopy];
+    friendListViewController.demoType = [DemoViewModel sharedInstance].currentDemoType;
     return  friendListViewController;
 }
 
@@ -47,6 +47,11 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     isOnSearching = NO;
+
+}
+
+- (void)viewWillLayoutSubviews{
+    [super viewDidLayoutSubviews];
     if(self.friendsArray.count ==0){
         [self initEmptyFriendView];
     }else{
@@ -54,20 +59,6 @@
         [self initFriendListTableView];
         [self initRefreshControl];
     }
-}
-
-- (void)viewWillLayoutSubviews{
-    [super viewDidLayoutSubviews];
-    if(self.friendsArray.count ==0){
-        [self updateEmptyFriendView];
-    }else{
-        [self updateSearchTextFieldView];
-        [self updateFriendListTableView];
-    }
-    
-
-
-
 
 }
 
@@ -78,9 +69,15 @@
     CGFloat height = SearchTextFieldViewHeight;
     CGFloat x = 0;
     CGFloat y = SearchTextFieldViewPositionY;
-    self.searchTextFieldView = [[SearchTextFieldView alloc]initWithFrame:CGRectMake(x, y, width, height)];
-    self.searchTextFieldView.delegate = self;
-    [self.view addSubview:self.searchTextFieldView];
+    
+    if(self.searchTextFieldView == nil){
+        self.searchTextFieldView = [[SearchTextFieldView alloc]initWithFrame:CGRectMake(x, y, width, height)];
+        self.searchTextFieldView.delegate = self;
+        [self.view addSubview:self.searchTextFieldView];
+    }else{
+        self.searchTextFieldView.frame = CGRectMake(x, y, width, height);
+    }
+
 }
 
 
@@ -90,13 +87,16 @@
     CGFloat x = 0;
     CGFloat y = SearchTextFieldViewHeight+SearchTextFieldViewPositionY+10;
     
-    self.tableView = [[UITableView alloc] initWithFrame:CGRectMake(x, y, width, height) style:UITableViewStylePlain];
-    self.tableView.delegate = self;
-    self.tableView.dataSource = self;
-    [self.tableView registerClass:[FriendTableViewCell class] forCellReuseIdentifier:@"FriendCell"];
-    self.tableView.canCancelContentTouches = NO;
-
-    [self.view addSubview:self.tableView];
+    if(self.tableView == nil){
+        self.tableView = [[UITableView alloc] initWithFrame:CGRectMake(x, y, width, height) style:UITableViewStylePlain];
+        self.tableView.delegate = self;
+        self.tableView.dataSource = self;
+        [self.tableView registerClass:[FriendTableViewCell class] forCellReuseIdentifier:@"FriendCell"];
+        self.tableView.canCancelContentTouches = NO;
+        [self.view addSubview:self.tableView];
+    }else{
+        self.tableView.frame = CGRectMake(x, y, width, height);
+    }
 }
 
 - (void)initRefreshControl{
@@ -110,41 +110,13 @@
     CGFloat height = self.view.frame.size.height;
     CGFloat x = 0;
     CGFloat y = 0;
-    self.friendListEmptyView = [[FriendListEmptyView alloc]initWithFrame:CGRectMake(x, y, width, height)];
-    [self.view addSubview:self.friendListEmptyView];
     
-}
-
-#pragma mark - Update Frame
-
-- (void)updateSearchTextFieldView{
-    CGFloat width = self.view.frame.size.width;
-    CGFloat height = SearchTextFieldViewHeight;
-    CGFloat x = 0;
-    CGFloat y = SearchTextFieldViewPositionY;
-    self.searchTextFieldView.frame = CGRectMake(x, y, width, height);
-}
-
-
-- (void)updateFriendListTableView{
-    CGFloat width = self.view.frame.size.width;
-    CGFloat height = self.view.frame.size.height - SearchTextFieldViewHeight - SearchTextFieldViewPositionY -10;
-    CGFloat x = 0;
-    CGFloat y = SearchTextFieldViewHeight+SearchTextFieldViewPositionY+10;
-    
-    self.tableView.frame = CGRectMake(x, y, width, height) ;
-    [self.tableView reloadData];
-    
-}
-
-
-- (void) updateEmptyFriendView{
-    CGFloat width = self.view.frame.size.width;
-    CGFloat height = self.view.frame.size.height;
-    CGFloat x = 0;
-    CGFloat y = 0;
-    self.friendListEmptyView.frame = CGRectMake(x, y, width, height);
-
+    if(self.friendListEmptyView == nil){
+        self.friendListEmptyView = [[FriendListEmptyView alloc]initWithFrame:CGRectMake(x, y, width, height)];
+        [self.view addSubview:self.friendListEmptyView];
+    }else{
+        self.friendListEmptyView.frame = CGRectMake(x, y, width, height);
+    }
     
 }
 #pragma mark - SearchTextField Delegate
@@ -215,6 +187,7 @@
         return;
     }
     self.friendsViewModel = [[FriendsViewModel alloc]init];
+    
     [self.friendsViewModel fetchFriendsDataWithDemoType:self.demoType withSuccess:^(NSArray *friendsList,NSArray*inviteList) {
         self.friendsArray = friendsList;
         self.showFriendsArray = [friendsList mutableCopy];

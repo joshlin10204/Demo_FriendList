@@ -65,17 +65,12 @@
     CGFloat y = self.frame.size.height*0.5 - height*0.5;
     
     self.searchTextField = [[UITextField alloc] initWithFrame:CGRectMake(x,y,width,height)];
-  
     self.searchTextField.placeholder = @"想轉一筆給誰呢?" ;
-    
     self.searchTextField.minimumFontSize = 14;
-  
     self.searchTextField.textColor = [UIColor colorWithRed:(142/255.0) green:(142/255.0) blue:(147/255.0) alpha:1];
-    
+    self.searchTextField.keyboardType = UIKeyboardTypeDefault;
     self.searchTextField.returnKeyType = UIReturnKeySearch;
-  
     self.searchTextField.delegate = self;
-    
     [self.searchTextField addTarget:self
                   action:@selector(textFieldDidChange:)
         forControlEvents:UIControlEventEditingChanged];

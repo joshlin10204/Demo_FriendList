@@ -7,7 +7,7 @@
 
 #import <Foundation/Foundation.h>
 #import "FriendModel.h"
-#import "DemoModel.h"
+#import "DemoViewModel.h"
 
 
 @interface FriendsViewModel : NSObject

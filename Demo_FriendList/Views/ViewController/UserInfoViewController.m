@@ -12,6 +12,7 @@
 @property (nonatomic, strong) UserViewModel *userViewModel;
 @property (nonatomic, strong) UILabel *userNameLabel;
 @property (nonatomic, strong) UILabel *kokoIDLabel;
+@property (nonatomic, strong) UIImageView *avatarImage;
 @property (nonatomic, weak) NSString *userName;
 @property (nonatomic, weak) NSString *kokoID;
 
@@ -23,9 +24,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self reloadUserInfoData];
-    // Do any additional setup after loading the view.
-//    [self.view setBackgroundColor:[UIColor lightGrayColor]];
-//    [self initKOKOIDTitleLabel];
+
 }
 
 - (void)viewWillAppear:(BOOL)animated{
@@ -61,12 +60,16 @@
     CGFloat height = self.view.frame.size.height*0.25;
     CGFloat x = self.view.frame.size.width*0.04;
     CGFloat y = self.view.frame.size.height*0.5 - height;
-    self.userNameLabel = [[UILabel alloc]initWithFrame:CGRectMake(x, y, widht, height)];
-    self.userNameLabel.text = _userName?:@"";
-    self.userNameLabel.font = [UIFont boldSystemFontOfSize:17];
-    self.userNameLabel.textColor = [UIColor colorWithRed:(71/255.0) green:(71/255.0) blue:(71/255.0) alpha:1];
+    if(self.userNameLabel == nil){
+        self.userNameLabel = [[UILabel alloc]initWithFrame:CGRectMake(x, y, widht, height)];
+        self.userNameLabel.text = _userName?:@"";
+        self.userNameLabel.font = [UIFont boldSystemFontOfSize:17];
+        self.userNameLabel.textColor = [UIColor colorWithRed:(71/255.0) green:(71/255.0) blue:(71/255.0) alpha:1];
+        [self.view addSubview:self.userNameLabel];
+    }else{
+        self.userNameLabel.frame = CGRectMake(x, y, widht, height);
+    }
 
-    [self.view addSubview:self.userNameLabel];
 
 }
 - (void) initKOKOIDLabel{
@@ -74,12 +77,18 @@
     CGFloat height = self.view.frame.size.height*0.25;
     CGFloat x = self.view.frame.size.width*0.04;
     CGFloat y = self.view.frame.size.height*0.5;
-    self.kokoIDLabel = [[UILabel alloc]initWithFrame:CGRectMake(x, y, widht, height)];
-    self.kokoIDLabel.text = [NSString stringWithFormat:@"KOKO ID : %@", _kokoID?:@""];
-    self.kokoIDLabel.font = [UIFont systemFontOfSize:17];
-    self.kokoIDLabel.textColor = [UIColor colorWithRed:(71/255.0) green:(71/255.0) blue:(71/255.0) alpha:1];
-//    [self.kokoIDLabel sizeToFit];
-    [self.view addSubview:self.kokoIDLabel];
+
+    
+    if(self.kokoIDLabel == nil){
+        self.kokoIDLabel = [[UILabel alloc]initWithFrame:CGRectMake(x, y, widht, height)];
+        self.kokoIDLabel.text = [NSString stringWithFormat:@"KOKO ID : %@", _kokoID?:@""];
+        self.kokoIDLabel.font = [UIFont systemFontOfSize:17];
+        self.kokoIDLabel.textColor = [UIColor colorWithRed:(71/255.0) green:(71/255.0) blue:(71/255.0) alpha:1];
+    //    [self.kokoIDLabel sizeToFit];
+        [self.view addSubview:self.kokoIDLabel];
+    }else{
+        self.kokoIDLabel.frame = CGRectMake(x, y, widht, height);
+    }
     
     
 }
@@ -88,10 +97,15 @@
     CGFloat widht = height;
     CGFloat x = self.view.frame.size.width - widht;
     CGFloat y = self.view.frame.size.height*0.5 - widht*0.5;
-    UIImageView *imageView =  [[UIImageView alloc]initWithFrame:CGRectMake(x, y, widht, height)];
-    imageView.image  = [UIImage imageNamed:@"imgFriendsFemaleDefault"];
     
-    [self.view addSubview:imageView];
+    if(self.avatarImage == nil){
+        self.avatarImage =  [[UIImageView alloc]initWithFrame:CGRectMake(x, y, widht, height)];
+        self.avatarImage.image  = [UIImage imageNamed:@"imgFriendsFemaleDefault"];
+        [self.view addSubview:self.avatarImage];
+    }else{
+        self.avatarImage.frame = CGRectMake(x, y, widht, height);
+    }
+
 }
 
 

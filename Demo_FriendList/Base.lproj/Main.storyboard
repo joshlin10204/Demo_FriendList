@@ -28,7 +28,7 @@
         <!--Demo-->
         <scene sceneID="I1s-hI-jIs">
             <objects>
-                <viewController id="0Yw-ky-Btf" customClass="HomePage" sceneMemberID="viewController">
+                <viewController id="0Yw-ky-Btf" customClass="DemoPage" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="XAS-kI-fDc">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>

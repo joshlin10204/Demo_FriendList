@@ -29,25 +29,17 @@
 
 @implementation FriendPageViewController
 
-+(FriendPageViewController*) initFriendPageViewControllerWithDemoType:(DemoType)type{
-    
-    FriendPageViewController *friendPageViewController  = [[FriendPageViewController alloc]init];
-    friendPageViewController.demoType = type;
-    return  friendPageViewController;
-}
-
-
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.friendsBadgeCount = 0;
-    [self.view setBackgroundColor:[UIColor whiteColor]];
-
+    self.demoType = [DemoViewModel sharedInstance].currentDemoType;
+    [self fetchFriendListDate];
     
 }
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
     [self initActivityIndicatorView];
-    [self fetchFriendListDate];
+
 
 }
 - (void)viewDidAppear:(BOOL)animated{
@@ -90,12 +82,16 @@
     CGFloat height = 100;
     CGFloat x = self.view.center.x - width*0.5;
     CGFloat y = self.view.center.y - height*0.5;
+    if(self.activityIndicator == nil){
+        self.activityIndicator = [[UIActivityIndicatorView alloc] initWithFrame:CGRectMake(x,y,width,height)];
+        [self.activityIndicator setActivityIndicatorViewStyle:UIActivityIndicatorViewStyleLarge];
+        [self.activityIndicator startAnimating];
+        [self.view addSubview:self.activityIndicator];
+    }else{
+        self.activityIndicator.frame = CGRectMake(x,y,width,height);
+    }
     
-    self.activityIndicator = [[UIActivityIndicatorView alloc] initWithFrame:CGRectMake(x,y,width,height)];
-    [self.activityIndicator setActivityIndicatorViewStyle:UIActivityIndicatorViewStyleLarge];
-//    self.activityIndicator.center = self.view.center;
-    [self.activityIndicator startAnimating];
-    [self.view addSubview:self.activityIndicator];
+    
 }
 
 - (void) initInviteListViewController{
@@ -134,7 +130,7 @@
     CGFloat x = 0;
     CGFloat y = self.headerSegmentView.frame.origin.y + self.headerSegmentView.frame.size.height;
     self.pagesViewControllersArray = [NSMutableArray arrayWithCapacity:1];
-    self.friendListViewController = [FriendListViewController initFriendListViewControllerWithDemoType:self.demoType withFriendsList:self.friendsList];
+    self.friendListViewController = [FriendListViewController initFriendListViewControllerWithFriendsList:self.friendsList];
     self.chatListViewController = [[ChatListViewController alloc]init];
     [self.pagesViewControllersArray addObject:self.friendListViewController];
     [self.pagesViewControllersArray addObject:self.chatListViewController];

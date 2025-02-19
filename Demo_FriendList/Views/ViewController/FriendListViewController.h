@@ -11,6 +11,6 @@
 
 @interface FriendListViewController : UIViewController
 
-+(FriendListViewController*) initFriendListViewControllerWithDemoType:(DemoType)type withFriendsList:(NSArray<FriendModel*>*)list;
++(FriendListViewController*) initFriendListViewControllerWithFriendsList:(NSArray<FriendModel*>*)list;
 @end
 

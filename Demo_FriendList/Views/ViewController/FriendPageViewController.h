@@ -6,12 +6,11 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "DemoModel.h"
+#import "DemoViewModel.h"
 #import "InviteListViewController.h"
 #import "CustomSegmentedView.h"
 
 @interface FriendPageViewController : UIViewController
-+(FriendPageViewController*) initFriendPageViewControllerWithDemoType:(DemoType)type;
 @property (nonatomic, assign) DemoType  demoType;
 @property (nonatomic, strong) InviteListViewController * inviteListViewController;
 @property (nonatomic, strong) CustomSegmentedView *headerSegmentView;

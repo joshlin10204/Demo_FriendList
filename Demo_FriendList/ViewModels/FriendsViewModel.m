@@ -32,7 +32,6 @@
             url = FriendList1URL;
             [urls addObject:FriendList1URL];
             [urls addObject:FriendList2URL];
-
             break;
         case DemoTypeInviteFriend:
             [urls addObject:FriendListWithInviteURL];
@@ -44,7 +43,6 @@
     dispatch_group_t group = dispatch_group_create();
     NetworkingManager *manager = [[NetworkingManager alloc]init];
     NSMutableDictionary<NSString *, FriendModel *> *friendDict = [NSMutableDictionary dictionary];
-
     for (NSString *url in urls) {
             dispatch_group_enter(group);
             [manager connectWithUrl:url withHTTPType:GET parameter:nil success:^(id responseObject) {
@@ -60,7 +58,7 @@
                     model.name = info[@"name"] ?: @"";
                     model.status = info[@"status"] ?: 0;
                     model.updateDate = updateDate;
-
+                    
                     FriendModel *existingModel = friendDict[fid];
                     if (!existingModel || [updateDate compare:existingModel.updateDate options:NSNumericSearch] == NSOrderedDescending) {
                         friendDict[fid] = model;
@@ -76,6 +74,7 @@
 
         // 當所有請求都完成時
         dispatch_group_notify(group, dispatch_get_main_queue(), ^{
+        
             if (friendDict.count > 0) {
                 NSArray *finalList = [friendDict allValues];
                 NSArray *friendList = [self getFriendsList:finalList];
@@ -94,9 +93,6 @@
     NSMutableArray *searchList = [[NSMutableArray alloc]init];
     
     for(FriendModel *model in friendsList){
-//        if([searchString isEqualToString:model.name]){
-//            [searchList addObject:model];
-//        }
         
         if ([model.name rangeOfString:searchString options:NSCaseInsensitiveSearch].location != NSNotFound) {
             [searchList addObject:model];

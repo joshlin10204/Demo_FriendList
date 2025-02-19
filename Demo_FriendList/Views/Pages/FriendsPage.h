@@ -6,13 +6,10 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "DemoModel.h"
+#import "DemoViewModel.h"
 
 
 @interface FriendsPage : UIViewController
-
-+(FriendsPage*) initFriendsPageWithDemoType:(DemoType)type;
-@property (nonatomic, assign) DemoType  demoType;
 
 @end
 
